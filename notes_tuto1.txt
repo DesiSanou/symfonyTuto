@@ -1,0 +1,84 @@
+creer un nouvequ projet
+composer create-project modele-duquel-s-inspirer nom_projet
+exemple: 
+composer create-project symfony/website-skeleton mon_projet
+
+start a symfony server:
+symfony server:start
+
+composants de symfony
+-controller traitement des requete et renvoyer les reponses
+-doctrine accès au données
+-twig rendu (affichage)
+
+creer un controller
+php bin/console make:controller 
+..and then give the name of the controller
+
+@Route: annotation Route
+
+
+Dans twig
+{{ variable}}: interpolation: afficher le contenu d'une varaible; 
+
+
+{% traitement %}: commande:faire un traitement
+
+exemple commande if:
+{ % if condition %}
+  //le paragraphe a afficher
+
+{ % endif }
+{% else %}
+
+Ces variables 'variable' et 'age' sont à declarer dans la liste de render de la fonction du controller
+
+la fonction path('nom_route')
+
+
+
+doctrine: ORM (Object Relational Mapping)
+
+*entity: table
+*manager: manipulation des lignes ajout, suppression de lignes etc 
+*repository: effectuer des selections
+
+Pour créer une base de données, aller dans le fichier .env 
+Ensuite DATABASE_URL=mysql://root:@127.0.0.1:3306/my_db_name?serverVersion=server_version
+puis on tape dans le cmd en etant dans le repertoire du projet
+php bin/console doctrine:database:create 
+
+**Entity
+une fois la base de données créée; on crée une table (entity) via le cmd
+php bin/console make:entity //ensuite laissez vous guider par le cmd
+
+il faut, après création, effectuer une migration
+Doctrine va effecuter un check entre ton code et ta base de données pour voir les mises à jour à effectuer
+
+php bin/console make:migration
+
+php bon/console doctrine:migration:migrate
+
+
+Insérer un jeu de fausses données en créant une fixture
+
+D'abord créer la dépendance avec composer:
+composer require orm-fixtures
+ 
+ensuite créer la fixture
+php bin/console make:fixtures // et laissez vous guider par le cmd
+
+**manager
+il sera créée une classe dans le dossier dataFixtures qu'on peut éditer
+en utilisant les méthodes de la classe qui a été créée avec entity (une représentation sous forme de classe d'une table sql
+Attention: ajouter use namespace_de_notre_classe\nom_de_la_classe; 
+faire persister les données ajoutées avec $manager etc.
+
+maintenant avec le cmd
+php bin/console doctrine:fixtures:load pour purger le données sur ma bases de données sql
+
+**repository
+Utilisation de doctrine repository
+aller dans les methodes de notre class controller et creer une variable
+$repo = $this -> getDoctrine()->getRepository(Article::class);
+On peut également utiliser l'injection de dependances de symfony pour utiliser directement les variables
