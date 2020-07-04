@@ -45,11 +45,8 @@ class BlogController extends AbstractController
 
         }
    
-        $form = $this->createFormBuilder($article)
-                     -> add('title', TextType::class)
-                     -> add('text')
-                     -> add('image')
-                     -> getForm();
+        $form = $this->createForm(ArticleType::class, $article);
+                     
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid())
         {
