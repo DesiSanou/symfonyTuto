@@ -11,6 +11,9 @@ use App\Entity\Article;
 use App\Repository\ArticleRepository;
 use App\Form\ArticleType;
 
+use App\Entity\Comment;
+use App\Form\CommentType;
+
 class BlogController extends AbstractController
 {
     /**
@@ -60,16 +63,32 @@ class BlogController extends AbstractController
             return $this->redirectToRoute('blog_show', ['id' => $article->getId()]);
         }
 
-        return $this->render('blog/create.html.twig', [ 'formArticle'=> $form->createView(), 'editMode' => !is_null($article->getId())]);
+        return $this->render('blog/create.html.twig', [ 'formArticle'=> $form->createView(), 
+            'editMode' => !is_null($article->getId())]);
     }
 
    /**
     * @Route("/blog/{id}", name="blog_show")
     */
-    public function show(Article $article)
+    public function show(Article $article, Request $request,EntityManagerInterface $manager)
     {
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment);
+        
+        $form->handleRequest($request);
 
-        return $this->render('blog/show.html.twig', [ 'article' => $article]);
+        if($form->isSubmitted() && $form->isValid())
+        {
+            $comment->setCreatedAt(new \DateTime());
+            $comment->setArticle($article);
+
+            $manager->persist($comment);
+            $manager->flush();
+
+            return $this->redirectToroute('blog_show', ['id'=> $article->getId()]);
+        }
+
+        return $this->render('blog/show.html.twig', [ 'article' => $article, 'commentForm'=> $form->createView()]);
     }
 
 

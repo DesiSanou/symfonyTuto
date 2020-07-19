@@ -2,30 +2,28 @@
 
 namespace App\Form;
 
-use App\Entity\Article;
+use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
-use App\Entity\Category;
-
-class ArticleType extends AbstractType
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+class RegistrationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('title')
-            ->add('category', EntityType::class, [ 'class' => Category::class, 'choice_label' => 'title'])
-            ->add('text')
-            ->add('image')
+            ->add('email')
+            ->add('username')
+            ->add('password', PasswordType::class)
+            ->add('confirm_password', PasswordType::class)
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Article::class,
+            'data_class' => User::class,
         ]);
     }
 }
